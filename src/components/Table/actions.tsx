@@ -1,0 +1,53 @@
+import { DownloadIcon, MoreHorizontal, PencilIcon, TrashIcon } from "lucide-react";
+import { Button } from "../ui/button";
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "../ui/dropdown-menu";
+type Props = {
+    openRenameDialog: (id:string, name:string, type: "folder" | "file") => void;
+    openDeleteDialog: (id:string,name:string, type: "folder" | "file") => void;
+    id: string;
+    name:string;
+    type: "folder"  | "file",
+    downloadUrl?: string;
+}
+function Actions({
+    openRenameDialog,
+    openDeleteDialog,
+    id,
+    name,
+    type,
+    downloadUrl
+}:Props){
+      
+        return (
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button variant="ghost" className="h-8 w-8 p-0">
+                  <span className="sr-only">Open menu</span>
+                  <MoreHorizontal className="h-4 w-4" />
+                  
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end">
+                <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                <DropdownMenuItem
+                  onClick={() => openDeleteDialog(id,name, type)}
+                  className="text-red-500 flex items-center space-x-2"
+                >              
+                  <TrashIcon size={16}/> <span>Delete {type}</span>
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick = {() => openRenameDialog(id,name,type)} className="dark:text-gray-400 text-black/80 flex items-center space-x-2">
+                    <PencilIcon size={16}/> <span>Edit {type}</span>
+                </DropdownMenuItem>
+                {
+                  type === "file" && (
+                <DropdownMenuItem>
+                  <a href={`${downloadUrl}`} download={name} className="dark:text-gray-400 text-black/80 flex items-center space-x-2" target="_blank"><DownloadIcon size={16}/> <span>Download</span></a> 
+                </DropdownMenuItem>
+                  )
+                }
+              </DropdownMenuContent>
+            </DropdownMenu>
+          )
+}
+export default Actions;
