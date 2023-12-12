@@ -40,11 +40,12 @@ function FolderDialog() {
         parentId: folderId ?? null,
         timestamp: serverTimestamp(),
         size: 0,
-        type: "folder"
+        type: "folder",
+        userId: user.uid
       };
       const folderCreated = await addDoc(foldersCollectionRef, folderDetails);
     //@ts-ignore
-     folderDetails.timestamp = new Date(folderDetails.timestamp?.seconds * 1000) || new Date();
+     folderDetails.timestamp = new Date();
      (folderDetails as FileOrFolderType).id = folderCreated.id;
      //update the table state.
       updateData(folderDetails as FileOrFolderType);

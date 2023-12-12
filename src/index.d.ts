@@ -7,6 +7,7 @@ type FileType = {
     downloadUrl: string;
     parentId: string | null;
     type: string;
+    userId: string;
 
 }
 type FolderType = {
@@ -14,7 +15,8 @@ type FolderType = {
     parentId: string | null;
     timestamp: Date | FieldValue;
     size: number;
-    type: "folder"
+    type: "folder";
+    userId: string;
 }
 type UserType = {
     name: string;

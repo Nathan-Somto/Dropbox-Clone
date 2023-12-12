@@ -4,7 +4,7 @@ import { useTheme } from "@/hooks/useTheme";
 import { Button } from "@/components/ui/button";
 import Google from "@/assets/google.svg";
 import { Link, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { toast } from "@/components/ui/use-toast";
 import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { collection, doc, getDoc, getDocs, setDoc } from "firebase/firestore";
@@ -15,8 +15,13 @@ const MAX_SIZE = 5;
 function AuthPage() {
   const [isLoading, setIsLoading] = useState(false);
   const { theme } = useTheme();
-  const { setAuthState } = useAuth() as unknown as AuthContext;
+  const { setAuthState, authState: {user} } = useAuth() as unknown as AuthContext;
   const navigate = useNavigate();
+  useEffect(() => {
+    if(user !== null){
+      navigate(`/dashboard/${user.uid}`);
+    }
+  }, [user])
   async function checkForUserLimit() {
     const userSnapshot = await getDocs(collection(db, "users"));
     return userSnapshot.docs.length === MAX_SIZE;
@@ -43,8 +48,8 @@ function AuthPage() {
           profilePhoto: cred.user.photoURL as string,
         };
         await setDoc(userRef, userData);
-        navigate(`/dashboard/${cred.user.uid}`);
       }
+      navigate(`/dashboard/${cred.user.uid}`);
     } catch (err) {
       if (err instanceof Error) {
         toast({

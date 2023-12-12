@@ -68,15 +68,13 @@ function UploadDialog() {
     authState: { user },
   } = useAuth() as unknown as AuthContext;
   const {
-    tableState: { storageSize,tableData },
+    tableState: { storageSize },
     updateData,
-    storeFiles
   } = useTableData() as unknown as TableDataContext;
   const disableButton = storageSize >= MAX_STORAGE_SIZE;
   const onDrop = useCallback(
     (acceptedFiles: File[]) => {
       if (fileInfo.length === 2) return;
-      const newFiles: FileOrFolderType[] = []
       acceptedFiles.slice(0, 2).forEach((file) => {
         const reader = new FileReader();
         const formattedName =
@@ -96,6 +94,7 @@ function UploadDialog() {
         reader.onerror = () => console.log("file reading has failed");
         reader.onload = async () => {
           try {
+            if (user === null) throw new Error("user is not logged in!");
             const fileDetails: FileType = {
               name: file.name,
               size: file.size,
@@ -103,6 +102,7 @@ function UploadDialog() {
               downloadUrl: "",
               parentId: folderId ?? null,
               type: file.type,
+              userId: user.uid
             };
             // store file in firestore
             const filesCollectionRef = collection(db, "files");
@@ -132,7 +132,7 @@ function UploadDialog() {
             fileDetails.downloadUrl = downloadUrl ?? "";
             fileDetails.timestamp = new Date();
             (fileDetails as FileOrFolderType).id = fileCreated.id;
-            newFiles.push(fileDetails as FileOrFolderType)
+            updateData(fileDetails as unknown as  FileOrFolderType);
           } catch (err) {
             setUploadFailed((prevState) => ({
               ...prevState,
@@ -142,13 +142,6 @@ function UploadDialog() {
         };
         reader.readAsArrayBuffer(file);
       });
-      // when we are done, update the ui at once.
-      if(newFiles.length === 1){
-        updateData(newFiles[0])
-      }
-      else{
-        storeFiles([...newFiles, ...tableData], true)
-      }
     },
     [fileInfo.length]
   );
@@ -228,7 +221,7 @@ function UploadDialog() {
           <FileBoxIcon className="mr-1 h-5 w-5" /> <span>Upload File</span>
         </Button>
       </DialogTrigger>
-      <DialogContent className="min-h-[350px]">
+      <DialogContent className="h-[350px] overflow-auto !bg-[hsl(var(--primary-foreground))]">
         <DialogHeader
           {...getRootProps({
             className: clsx({

@@ -14,7 +14,7 @@ export const columns: ColumnDef<FileOrFolderType>[] = [
       const isFolder = renderValue() === "folder";
       let extension = "";
       if (!isFolder) {
-        extension = row.original.name?.split(".")[1];
+        extension = row.original.name?.split(".")[1]?.split(' ')[0];
       }
       return (
         <div className="w-9">

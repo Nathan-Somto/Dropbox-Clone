@@ -4,7 +4,7 @@ import UploadDialog from "@/components/Dialog/UploadDialog";
 import { Button } from "@/components/ui/button";
 import { Progress } from "@/components/ui/progress";
 import { AlertCircleIcon, ChevronLeft, Cloud } from "lucide-react";
-import { Link, useNavigate, useParams } from "react-router-dom";
+import { Link, useLocation, useNavigate, useParams } from "react-router-dom";
 //import { v4 as uuidv4 } from "uuid";
 import {
   useTableData,
@@ -19,6 +19,7 @@ import SkeletonLoader from "@/components/Table/skeleton-loader";
 import { useAuth, type AuthContext } from "@/hooks/useAuth";
 import {
   FieldValue,
+  and,
   collection,
   getDocs,
   query,
@@ -87,6 +88,7 @@ function DashboardPage() {
   const [folderPath, setFolderPath] = useState<FolderPathType[]>([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(false);
+  const location = useLocation();
   const navigate = useNavigate();
   const {
     storeFiles,
@@ -96,9 +98,10 @@ function DashboardPage() {
     setLoading(true);
     const data: FileOrFolderType[] = [];
     try {
+      if(user === null) throw new Error("user is not logged in");
       const q1 = query(
         collection(db, "folders"),
-        where("parentId", "==", folderId ?? null)
+        and(where("parentId", "==", folderId ?? null), where("userId", "==", user.uid))
       );
       const folders = await getDocs(q1);
       folders.docs.forEach((doc) => {
@@ -112,7 +115,7 @@ function DashboardPage() {
       });
       const q2 = query(
         collection(db, "files"),
-        where("parentId", "==", folderId ?? null)
+        and(where("parentId", "==", folderId ?? null), where("userId", "==", user.uid))
       );
       const files = await getDocs(q2);
       files.docs.forEach((doc) => {
@@ -191,10 +194,12 @@ function DashboardPage() {
             Something Unexpected happened!
           </h2>
           <p className="test-sm text-gray-700 mt-2 dark:text-gray-400">
-            Please try retrying the app or check your connection
+            Please try retrying the app or check your connection!
           </p>
           <Button
-            onClick={() => console.log("refreshed")}
+            onClick={() => navigate(location.pathname, {
+              replace: true
+            })}
             size="lg"
             variant={"secondary"}
             className="mt-3"

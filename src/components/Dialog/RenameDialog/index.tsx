@@ -30,7 +30,6 @@ function RenameDialog({ name, id, setDialogState, type, open }: Props) {
     setInput(name.split(".")[0]);
     fileExtensionRef.current = name.split(".")[1];
   }, [name]);
-  console.log(fileExtensionRef.current);
   async function handleEdit(e: React.FormEvent<HTMLFormElement>) {
     setLoading(true);
     e.preventDefault();

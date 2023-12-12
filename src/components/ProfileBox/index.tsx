@@ -36,10 +36,10 @@ function ProfileBox() {
         />
       </DropdownMenuTrigger>
       <DropdownMenuContent
-        className="shadow-lg !min-h-[10rem] flex flex-col justify-center dark:bg-slate-800/50 px-5 mt-10 rounded-xl"
+        className="shadow-lg !min-h-[10rem] flex flex-col justify-center dark:bg-slate-950 px-5 mt-10 rounded-xl"
         align="end"
       >
-        <DropdownMenuItem className="flex !hover:bg-transparent gap-3">
+        <DropdownMenuItem onClick={() => navigate(`/dashboard/${user?.uid}`)} className="flex !hover:bg-transparent gap-3">
           <img
             src={user?.photoURL ?? ""}
             alt="user profile image"

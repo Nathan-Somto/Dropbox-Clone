@@ -30,7 +30,7 @@ function HomePage() {
             <ArrowRight className="ml-6" />
           </Button>
         </div>
-        <div className="dark:bg-slate-900 rounded-md h-[300px]  bg-[#1e1919] p-10">
+        <div className="dark:bg-slate-900 rounded-md h-[300px] lg:w-[400px] xl:w-[500px] flex-shrink-0 w-full  bg-[#1e1919] p-2">
           <video
             aria-hidden="false"
             aria-label="video player"
@@ -38,7 +38,7 @@ function HomePage() {
             playsInline
             loop
             muted
-            className="rounded-lg"
+            className="rounded-lg h-full w-full"
           >
             <source src="" type="video/quicktime; codecs=hvc1" />
             <source src="" type="video/webm; codecs=vp9" />

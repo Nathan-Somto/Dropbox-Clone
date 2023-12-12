@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router-dom";
 import Home from "@/app/home/page";
 import Dashboard from "@/app/dashboard/page";
 import Auth from "@/app/auth/page";
+import NotFound from "./app/404/page";
 import AppLayout from "./components/AppLayout";
 import DashboardLayout from "./components/DashboardLayout";
 function App() {
@@ -15,6 +16,7 @@ function App() {
         </Route>
         <Route path="sign-in" element={<Auth />} />
       </Route>
+      <Route path="*" element={<NotFound/>}/>
     </Routes>
   );
 }

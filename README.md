@@ -6,11 +6,26 @@
 I wanted to practice working with tools such as Shadcn UI, React Dropzone and Firebase.
 
 **Note: The application is limited to only 5 users with a ```200 MB``` storage limit**
+
+**Why?** 
+I am using firebase storage free tier and my application is limited to ``1GB`` free storage and ``200MB`` for 5 user's seems like a fair-trade to me.
 ## Screenshots
 
 ### Home Page
+### Dark
+ ![dark-home](./screenshots/dark-home.png)
+### Light
+![light-home](./screenshots/light-home.png)
 ### Authentication Page
+### Dark
+![dark-sign-in](./screenshots/dark-sign-in.png)
+### Light
+![light-sign-in](./screenshots/light-sign-in.png)
 ### Dashboard Page
+### Dark
+![dark-dashboard](./screenshots/dark-dashboard.png)
+### Light
+![light-dashboard](./screenshots/light-dashboard.png)
 
 ## Tools
 

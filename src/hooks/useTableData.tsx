@@ -8,9 +8,9 @@ export type FileOrFolderType = ({
 export type TableDataType = FileOrFolderType[];
 export type TableDataContext = {
   tableState: TableState;
-  storeFiles: (tableData: TableDataType, isRoot: boolean) => void;
+  storeFiles: (tableData: TableDataType, isRoot: boolean, size?:number) => void;
   editName: (name: string, id: string) => void;
-  deleteData: (id: string) => void;
+  deleteData: (id: string, size:number) => void;
   updateData: (data: FileOrFolderType) => void;
 };
 const TableData = createContext<TableDataContext | null>(null);
@@ -67,8 +67,8 @@ function TableDataProvider({ children }: { children: React.ReactNode }) {
   };
 
   const [tableState, dispatch] = useReducer<ReducerType>(reducer, initialTableState);
-  function storeFiles(tableData: TableDataType, isRoot: boolean) {
-    const storageSize = isRoot ? calculateStorageSize(tableData) : tableState.storageSize;
+  function storeFiles(tableData: TableDataType, isRoot: boolean, size?:number) {
+    const storageSize = isRoot ? calculateStorageSize(tableData) : size ? tableState.storageSize + size : tableState.storageSize;
     dispatch({ type: "Set/data", payload: { tableData, storageSize } });
   }
   function calculateStorageSize(tableData: TableDataType) {
@@ -86,14 +86,14 @@ function TableDataProvider({ children }: { children: React.ReactNode }) {
     });
     dispatch({ type: "Edit/name", payload: { tableData } });
   }
-  function deleteData(id: string) {
+  function deleteData(id: string,  size:number) {
     const tableData = tableState.tableData.filter((item) => item.id !== id);
-    const storageSize = calculateStorageSize(tableData);
+    const storageSize =  tableState.storageSize - size ;
     dispatch({ type: "Delete/data", payload: { tableData, storageSize } });
   }
   function updateData(data: FileOrFolderType) {
     const tableData = [data, ...tableState.tableData];
-    const storageSize = calculateStorageSize(tableData);
+    const storageSize =  data.size + tableState.storageSize;
     dispatch({ type: "Update/data", payload: { tableData, storageSize } });
   }
   return (

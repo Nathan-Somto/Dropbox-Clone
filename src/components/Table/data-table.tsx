@@ -29,10 +29,11 @@ export type DialogStateProps = {
   name: string;
   id: string;
   open: boolean;
+  size: number;
 };
 
 export type DeleteDialogType = DialogStateProps;
-export type RenameDialogType = DialogStateProps;
+export type RenameDialogType = Omit<DialogStateProps, "size">;
 
 export function DataTable<TData, TValue>({
   columns,
@@ -46,8 +47,9 @@ export function DataTable<TData, TValue>({
   const [deleteDialog, setDeleteDialog] = useState<DeleteDialogType>({
     id: "",
     type: "file",
-    name:"file",
+    name: "file",
     open: false,
+    size: 0,
   });
   const [renameDialog, setRenameDialog] = useState<RenameDialogType>({
     id: "",
@@ -55,27 +57,17 @@ export function DataTable<TData, TValue>({
     name: "file",
     open: false,
   });
-  function openRenameDialog(
-    id: string,
-    name: string,
-    type: DialogStateProps["type"]
-  ) {
+  function openRenameDialog(options: Omit<RenameDialogType, "open">) {
     setRenameDialog((prevState) => ({
       ...prevState,
-      id,
-      name,
-      type,
+      ...options,
       open: true,
     }));
-    console.log("in function",renameDialog);
   }
-  console.log(renameDialog);
-  function openDeleteDialog(id: string,name:string, type: DialogStateProps["type"]) {
+  function openDeleteDialog(options: Omit<DeleteDialogType, "open">) {
     setDeleteDialog((prevState) => ({
       ...prevState,
-      id,
-      type,
-      name,
+      ...options,
       open: true,
     }));
   }
@@ -129,7 +121,10 @@ export function DataTable<TData, TValue>({
                           ? "folder"
                           : "file"
                       }
-                      downloadUrl={(row.original as FileType)?.downloadUrl ?? undefined}
+                      size={(row.original as FileOrFolderType).size}
+                      downloadUrl={
+                        (row.original as FileType)?.downloadUrl ?? undefined
+                      }
                     />
                   </TableCell>
                 </TableRow>

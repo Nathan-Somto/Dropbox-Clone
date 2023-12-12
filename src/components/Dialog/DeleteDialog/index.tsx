@@ -26,7 +26,7 @@ import React, { useState } from "react";
 type Props = DeleteDialogType & {
   setDialogState: React.Dispatch<React.SetStateAction<DeleteDialogType>>;
 };
-function DeleteDialog({ id, open, setDialogState, type, name }: Props) {
+function DeleteDialog({ id, open, setDialogState, type, name,size }: Props) {
   const { deleteData } = useTableData() as unknown as TableDataContext;
   const [loading, setLoading] = useState(false);
   const {
@@ -66,7 +66,7 @@ function DeleteDialog({ id, open, setDialogState, type, name }: Props) {
       console.log(id, type);
       // delete from firestore
       // update the ui.
-      deleteData(id);
+      deleteData(id, size);
       // close the modal
       toggleOpen();
       toast({
